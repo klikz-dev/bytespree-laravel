@@ -1,0 +1,25 @@
+name: PHP-CS-Fixer
+
+on:
+  push:
+    branches-ignore:
+
+jobs:
+  run-cs-fixer:
+    name: Install and Run CS Fixer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup PHP with tools
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install CS Fixer
+        working-directory: ./tools/php-cs-fixer
+        run:  composer install -n -q --no-progress
+      - name: Run PHP-CS-Fixer
+        run: ./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --config=./.php-cs-fixer.php
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply PHP-CS-Fixer changes
